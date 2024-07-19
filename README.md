@@ -46,3 +46,5 @@ Integrate AOS animations for a dynamic user experience.
 Testing and Deployment
 Test the project to ensure all components work seamlessly.
 Deploy the project on GitHub Pages or another web hosting service.
+
+Used Jinja2 template Rending
