@@ -8,10 +8,10 @@ app = Flask(__name__)
 
 # Load the CSV data into a pandas DataFrame
 
-conn = sqlite3.connect('fastfood.db')
-df = pd.read_sql("SELECT * FROM menu", conn)
-conn.close()
-print(df)    
+def get_db_connection():
+    conn = sqlite3.connect('fastfood.db')
+    conn.row_factory = sqlite3.Row
+    return conn  
 
 @app.route('/')
 def index():
