@@ -11,7 +11,7 @@ app = Flask(__name__)
 conn = sqlite3.connect('fastfood.db')
 df = pd.read_sql("SELECT * FROM menu", conn)
 conn.close()
-    
+print(df)    
 
 @app.route('/')
 def index():
