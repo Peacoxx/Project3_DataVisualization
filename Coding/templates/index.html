@@ -1,54 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Scatterplot</title>
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <title>Nutrition Data</title>
 </head>
 <body>
-    <h1>Fast Food Nutritional Value Analysis</h1>
-    <form id="scatter-form">
-        <label for="x_axis">Nutritional Option X-Axis:</label>
-        <select id="x_axis" name="x_axis">
-            {% for column in columns %}
-                <option value="{{ column }}">{{ column }}</option>
+    <h1>Select Restaurant and Nutrition Categories</h1>
+    
+    <form id="selection-form" method="post">
+        <label for="restaurant">Select Restaurant:</label>
+        <select id="restaurant" name="restaurant">
+            {% for restaurant in restaurants %}
+                <option value="{{ restaurant }}">{{ restaurant }}</option>
             {% endfor %}
         </select>
-        <label for="y_axis">Nutritional Option Y-axis:</label>
-        <select id="y_axis" name="y_axis">
-            {% for column in columns %}
-                <option value="{{ column }}">{{ column }}</option>
+        
+        <label for="category1">Select Category 1:</label>
+        <select id="category1" name="category1">
+            {% for category in categories %}
+                <option value="{{ category }}">{{ category }}</option>
             {% endfor %}
         </select>
-        <label for="restaurant">Restaurant:</label>
-        <input type="text" id="restaurant" name="restaurant">
-        <button type="submit">Submit</button>
+        
+        <label for="category2">Select Category 2:</label>
+        <select id="category2" name="category2">
+            {% for category in categories %}
+                <option value="{{ category }}">{{ category }}</option>
+            {% endfor %}
+        </select>
+        
+        <input type="submit" value="Submit">
     </form>
-    <div id="scatterplot"></div>
-
-    <script>
-        document.getElementById('scatter-form').addEventListener('submit', function(event) {
-            event.preventDefault();
-            var x_axis = document.getElementById('x_axis').value;
-            var y_axis = document.getElementById('y_axis').value;
-            var restaurant = document.getElementById('restaurant').value;
-
-            fetch('/scatterplot', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: `x_axis=${x_axis}&y_axis=${y_axis}&restaurant=${restaurant}`
-            })
-            .then(response => response.json())
-            .then(data => {
-                var graphDiv = document.getElementById('scatterplot');
-                Plotly.newPlot(graphDiv, JSON.parse(data).data, JSON.parse(data).layout);
-            });
-        });
-    </script>
-
-
+    
+    <!-- Add your JavaScript and other code here -->
 </body>
 </html>
