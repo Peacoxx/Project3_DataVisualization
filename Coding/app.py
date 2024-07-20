@@ -4,7 +4,7 @@ import pandas as pd
 app = Flask(__name__)
 
 # Load the CSV data into a pandas DataFrame
-file_path = "../Resources/FastFoodNutritionMenuV2.csv"
+file_path = "../Resources/cleaned_df.csv"
 df = pd.read_csv(file_path)
 
 @app.route('/')
