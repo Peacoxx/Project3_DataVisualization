@@ -1,21 +1,24 @@
 from flask import Flask, render_template, request, jsonify
 import pandas as pd
-import os
 
 app = Flask(__name__)
 
+# Load the CSV data into a pandas DataFrame
+file_path = "../Resources/FastFoodNutritionMenuV2.csv"
+df = pd.read_csv(file_path)
+
 @app.route('/')
 def index():
-    csv_path = '/Users/pamala/Documents/GitHub/Project3_DataVisualization/Resources/FastFoodNutritionMenuV2.csv'
-    
-    if not os.path.exists(csv_path):
-        return "CSV file not found!", 404
-    
-    df = pd.read_csv(csv_path)
-    restaurants = df['restaurant'].unique().tolist()
-    categories = df.columns[2:].tolist()
-    
-    return render_template('index.html', restaurants=restaurants, categories=categories)
+    # Get unique restaurant names from the 'company' column
+    restaurants = df['company'].unique().tolist()
+    # Get nutrition categories from all columns except 'company' and 'item'
+    nutrition_categories = df.columns.drop(['company', 'item']).tolist()
+
+    # Debug: Print loaded data
+    print("Restaurants:", restaurants)
+    print("Nutrition Categories:", nutrition_categories)
+
+    return render_template('index.html', restaurants=restaurants, categories=nutrition_categories)
 
 @app.route('/get_data', methods=['POST'])
 def get_data():
@@ -23,12 +26,13 @@ def get_data():
     category1 = request.form['category1']
     category2 = request.form['category2']
     
-    csv_path = '/Users/pamala/Documents/GitHub/Project3_DataVisualization/Resources/FastFoodNutritionMenuV2.csv'
+    # Filter the data based on the selected restaurant
+    filtered_df = df[df['company'] == restaurant]
     
-    df = pd.read_csv(csv_path)
-    data = df[df['restaurant'] == restaurant][['item', category1, category2]].to_dict(orient='records')
+    # Prepare the data for the scatter plot
+    plot_data = filtered_df[['item', category1, category2]].dropna().to_dict(orient='records')
     
-    return jsonify(data)
+    return jsonify(plot_data)
 
 if __name__ == '__main__':
     app.run(debug=True)
