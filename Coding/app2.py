@@ -9,14 +9,14 @@ app = Flask(__name__)
 # Load the CSV data into a pandas DataFrame
 
 def get_db_connection():
-    conn = sqlite3.connect('fastfood.db')
+    conn = sqlite3.connect('fastfood1.db')
     conn.row_factory = sqlite3.Row
     return conn  
 
 @app.route('/')
 def index():
     conn = get_db_connection()
-    df = pd.read_sql('SELECT * FROM menu', conn)
+    df = pd.read_sql('SELECT * FROM table_columns', conn)
     conn.close()
     columns = df.columns.tolist()
     return render_template('index.html', columns=columns)
@@ -28,7 +28,7 @@ def scatterplot():
     restaurant = request.form.get('restaurant')
 
     conn = get_db_connection()
-    query = 'SELECT * FROM menu'
+    query = 'SELECT * FROM table_columns'
     df = pd.read_sql_query(query, conn)
     conn.close()
 
