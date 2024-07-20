@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Nutrition Data</title>
+</head>
+<body>
+    <h1>Select Restaurant and Nutrition Categories</h1>
+    
+    <form id="selection-form" method="post">
+        <label for="restaurant">Select Restaurant:</label>
+        <select id="restaurant" name="restaurant">
+            {% for restaurant in restaurants %}
+                <option value="{{ restaurant }}">{{ restaurant }}</option>
+            {% endfor %}
+        </select>
+        
+        <label for="category1">Select Category 1:</label>
+        <select id="category1" name="category1">
+            {% for category in categories %}
+                <option value="{{ category }}">{{ category }}</option>
+            {% endfor %}
+        </select>
+        
+        <label for="category2">Select Category 2:</label>
+        <select id="category2" name="category2">
+            {% for category in categories %}
+                <option value="{{ category }}">{{ category }}</option>
+            {% endfor %}
+        </select>
+        
+        <input type="submit" value="Submit">
+    </form>
+    
+    <!-- Add your JavaScript and other code here -->
+</body>
+</html>
