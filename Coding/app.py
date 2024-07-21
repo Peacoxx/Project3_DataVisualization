@@ -1,40 +1,46 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, send_file
 import pandas as pd
-import sqlite3
-import jinja2
+import matplotlib.pyplot as plt
+import io
+import os
 
 app = Flask(__name__)
 
-# Load the CSV data into a pandas DataFrame
-file_path = "../Coding/cleaned_df.csv"
-df = pd.read_csv(file_path)
-
 @app.route('/')
 def index():
-    # Get unique restaurant names from the 'company' column
+    # Load the CSV file
+    df = pd.read_csv('cleaned_df.csv')
+    # Get unique restaurants (Company)
     restaurants = df['Company'].unique().tolist()
-    # Get nutrition categories from all columns except 'company' and 'item'
-    nutrition_categories = df.columns.drop(['Company', 'Item']).tolist()
+    # Get category columns, excluding the first two assumed non-category columns
+    categories = df.columns[2:].tolist()
+    return render_template('index.html', restaurants=restaurants, categories=categories)
 
-    # Debug: Print loaded data
-    print("Restaurants:", restaurants)
-    print("Nutrition Categories:", nutrition_categories)
+@app.route('/submit', methods=['POST'])
+def submit():
+    selected_restaurant = request.form['restaurant']
+    selected_category1 = request.form['category1']
+    selected_category2 = request.form['category2']
+    
+    # Load the CSV file
+    df = pd.read_csv('cleaned_df.csv')
+    # Filter the DataFrame based on the selected restaurant
+    filtered_df = df[df['Company'] == selected_restaurant]
+    
+    # Create a scatter plot
+    plt.figure(figsize=(10, 6))
+    plt.scatter(filtered_df[selected_category1], filtered_df[selected_category2])
+    plt.xlabel(selected_category1)
+    plt.ylabel(selected_category2)
+    plt.title(f'Scatter Plot of {selected_category1} vs {selected_category2} for {selected_restaurant}')
+    
+    # Save the plot to a BytesIO object
+    img = io.BytesIO()
+    plt.savefig(img, format='png')
+    img.seek(0)
+    plt.close()
 
-    return render_template('index.html', restaurants=restaurants, categories=nutrition_categories)
-
-@app.route('/get_data', methods=['POST'])
-def get_data():
-    restaurant = request.form['restaurant']
-    category1 = request.form['category1']
-    category2 = request.form['category2']
-    
-    # Filter the data based on the selected restaurant
-    filtered_df = df[df['Company'] == restaurant]
-    
-    # Prepare the data for the scatter plot
-    plot_data = filtered_df[['Item', category1, category2]].dropna().to_dict(orient='records')
-    
-    return jsonify(plot_data)
+    return send_file(img, mimetype='image/png')
 
 if __name__ == '__main__':
     app.run(debug=True)

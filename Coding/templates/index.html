@@ -2,11 +2,32 @@
 <html>
 <head>
     <title>Nutrition Data</title>
+    <!-- AOS CSS -->
+    <link rel="stylesheet" href="https://cdn.rawgit.com/michalsnik/aos/2.1.1/dist/aos.css" />
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 18px;
+            text-align: left;
+        }
+        table th, table td {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+        }
+        table th {
+            background-color: #f4f4f4;
+        }
+        table tbody tr:nth-of-type(even) {
+            background-color: #f9f9f9;
+        }
+    </style>
 </head>
 <body>
     <h1>Select Restaurant and Nutrition Categories</h1>
     
-    <form id="selection-form" method="post">
+    <form id="selection-form" method="post" action="/submit">
         <label for="restaurant">Select Restaurant:</label>
         <select id="restaurant" name="restaurant">
             {% for restaurant in restaurants %}
@@ -30,7 +51,35 @@
         
         <input type="submit" value="Submit">
     </form>
-    
-    <!-- Add your JavaScript and other code here -->
+
+    {% if table_data %}
+        <h2 data-aos="fade-up">Nutrition Data for {{ selected_restaurant }}</h2>
+        <table data-aos="fade-up">
+            <thead>
+                <tr>
+                    {% for col in table_data[0].keys() %}
+                        <th>{{ col }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in table_data %}
+                    <tr>
+                        {% for value in row.values() %}
+                            <td>{{ value }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+    <!-- AOS JS -->
+    <script src="https://cdn.rawgit.com/michalsnik/aos/2.1.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 1200,
+        });
+    </script>
 </body>
 </html>
