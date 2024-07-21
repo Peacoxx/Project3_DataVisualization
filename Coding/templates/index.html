@@ -4,30 +4,49 @@
     <title>Nutrition Data</title>
     <!-- AOS CSS -->
     <link rel="stylesheet" href="https://cdn.rawgit.com/michalsnik/aos/2.1.1/dist/aos.css" />
+    <!-- Plotly JS -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            font-size: 18px;
-            text-align: left;
-        }
-        table th, table td {
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-        }
-        table th {
+        body {
+            font-family: 'Arial', sans-serif;
             background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
         }
-        table tbody tr:nth-of-type(even) {
-            background-color: #f9f9f9;
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+        }
+        form {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        select, input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            box-sizing: border-box;
+        }
+        .chart-container {
+            max-width: 800px;
+            margin: 20px auto;
         }
     </style>
 </head>
 <body>
-    <h1>Select Restaurant and Nutrition Categories</h1>
+    <h1 data-aos="fade-down">Select Restaurant and Nutrition Categories</h1>
     
-    <form id="selection-form" method="post" action="/submit">
+    <form id="selection-form" method="post" action="/submit" data-aos="fade-up">
         <label for="restaurant">Select Restaurant:</label>
         <select id="restaurant" name="restaurant">
             {% for restaurant in restaurants %}
@@ -52,26 +71,16 @@
         <input type="submit" value="Submit">
     </form>
 
-    {% if table_data %}
-        <h2 data-aos="fade-up">Nutrition Data for {{ selected_restaurant }}</h2>
-        <table data-aos="fade-up">
-            <thead>
-                <tr>
-                    {% for col in table_data[0].keys() %}
-                        <th>{{ col }}</th>
-                    {% endfor %}
-                </tr>
-            </thead>
-            <tbody>
-                {% for row in table_data %}
-                    <tr>
-                        {% for value in row.values() %}
-                            <td>{{ value }}</td>
-                        {% endfor %}
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    {% if plot_json %}
+        <h2 data-aos="fade-up">Bar Chart for {{ selected_restaurant }}</h2>
+        <div class="chart-container" data-aos="fade-up" id="plot">
+            <script>
+                var plot_data = {{ plot_json | safe }};
+                Plotly.newPlot('plot', plot_data.data, plot_data.layout);
+            </script>
+        </div>
+    {% else %}
+        <p>No chart data available.</p>
     {% endif %}
 
     <!-- AOS JS -->
