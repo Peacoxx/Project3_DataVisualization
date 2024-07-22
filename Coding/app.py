@@ -10,6 +10,7 @@ def index():
 @app.route('/data')
 def data():
     df = pd.read_csv('static/data/cleaned_df.csv')
+    df['Net Carbs'] = df['Carbs (g)'] - df['Fiber (g)']
     return df.to_json(orient='records')
 
 if __name__ == '__main__':
