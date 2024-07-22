@@ -1,4 +1,4 @@
-#!/Users/pamala/Documents/GitHub/Project3_DataVisualization/Coding/myenv/bin/python
+#!/Users/pamala/Documents/GitHub/Project3_DataVisualization/Coding/myenv/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys

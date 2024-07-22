@@ -1,94 +1,58 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-    <title>Nutrition Data</title>
-    <!-- AOS CSS -->
-    <link rel="stylesheet" href="https://cdn.rawgit.com/michalsnik/aos/2.1.1/dist/aos.css" />
-    <!-- Plotly JS -->
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-        }
-        h1 {
-            text-align: center;
-            margin-top: 20px;
-        }
-        form {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        label {
-            display: block;
-            margin: 10px 0 5px;
-        }
-        select, input[type="submit"] {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-            box-sizing: border-box;
-        }
-        .chart-container {
-            max-width: 800px;
-            margin: 20px auto;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Fast Food Nutrition Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 </head>
+
 <body>
-    <h1 data-aos="fade-down">Select Restaurant and Nutrition Categories</h1>
-    
-    <form id="selection-form" method="post" action="/submit" data-aos="fade-up">
-        <label for="restaurant">Select Restaurant:</label>
-        <select id="restaurant" name="restaurant">
-            {% for restaurant in restaurants %}
-                <option value="{{ restaurant }}">{{ restaurant }}</option>
-            {% endfor %}
-        </select>
-        
-        <label for="category1">Select Category 1:</label>
-        <select id="category1" name="category1">
-            {% for category in categories %}
-                <option value="{{ category }}">{{ category }}</option>
-            {% endfor %}
-        </select>
-        
-        <label for="category2">Select Category 2:</label>
-        <select id="category2" name="category2">
-            {% for category in categories %}
-                <option value="{{ category }}">{{ category }}</option>
-            {% endfor %}
-        </select>
-        
-        <input type="submit" value="Submit">
-    </form>
 
-    {% if plot_json %}
-        <h2 data-aos="fade-up">Bar Chart for {{ selected_restaurant }}</h2>
-        <div class="chart-container" data-aos="fade-up" id="plot">
-            <script>
-                var plot_data = {{ plot_json | safe }};
-                Plotly.newPlot('plot', plot_data.data, plot_data.layout);
-            </script>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12 p-5 text-center bg-light">
+        <h1>Fast Food Nutrition Dashboard</h1>
+        <p>Use the interactive charts below to explore the dataset</p>
+      </div>
+    </div>
+    <br>
+    <div class="row">
+      <div class="col-md-3">
+        <div class="card card-body bg-light">
+          <h6>Restaurant:</h6>
+          <select id="selDataset" onchange="optionChanged(this.value)"></select>
         </div>
-    {% else %}
-        <p>No chart data available.</p>
-    {% endif %}
+        <br>
+        <div class="card card-body bg-light">
+          <h6>Item:</h6>
+          <select id="selItem" onchange="itemChanged(this.value)"></select>
+        </div>
+        <br>
+        <div class="card card-primary">
+          <div class="card-header">
+            <h4 class="card-title">Item Info</h4>
+          </div>
+          <div id="sample-metadata" class="card-body"></div>
+        </div>
+      </div>
+      <div class="col-md-9">
+        <div id="bar"></div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div id="bubble"></div>
+      </div>
+    </div>
+  </div>
 
-    <!-- AOS JS -->
-    <script src="https://cdn.rawgit.com/michalsnik/aos/2.1.1/dist/aos.js"></script>
-    <script>
-        AOS.init({
-            duration: 1200,
-        });
-    </script>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <script src="./static/js/app.js"></script>
+
 </body>
+
 </html>
